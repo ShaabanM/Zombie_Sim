@@ -10,14 +10,14 @@ CXX = g++
 # Define useful shortcuts to access all cc files and o files
 CXXSRC = $(shell ls *.cc) # list of all the source code files
 CXXOBJ = $(CXXSRC:.cc=.o) # list of files with same name as source but .o extention
-CXXFLAGS = -std=c++11 -O3 -march=native  # flags provided by the prof in original code
+CXXFLAGS = -std=c++11 -O3 -march=native -lnetcdf_c++4  # flags provided by the prof in original code
 
 # dependency exe
 all: exe
 
 # creat executable if object files exist
 exe: $(CXXOBJ)
-	$(CXX) $(CXXOBJ) -o antsontable -lnetcdf_c++4
+	$(CXX) $(CXXOBJ) -o antsontable 
 
 # create object files
 .cc.o: 
