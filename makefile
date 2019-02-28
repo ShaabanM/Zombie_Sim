@@ -17,7 +17,7 @@ all: exe
 
 # creat executable if object files exist
 exe: $(CXXOBJ)
-	$(CXX) $(CXXOBJ) -o antsontable 
+	$(CXX) $(CXXOBJ) -o zombie_solver 
 
 # create object files
 .cc.o: 
@@ -28,5 +28,5 @@ exe: $(CXXOBJ)
 .PHONY: clean
 clean:
 	rm -f *.o 
-	rm antsontable
+	rm zombie_solver
 

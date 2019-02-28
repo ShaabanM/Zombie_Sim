@@ -10,6 +10,6 @@ using namespace std;
 using namespace netCDF;
 using namespace netCDF::exceptions;
 
-void append_netcdf(rarray<int, 4> arr, int dat_count);
+void append_netcdf(rarray<double, 2> arr, int dat_count);
 
 #endif
