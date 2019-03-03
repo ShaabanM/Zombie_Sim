@@ -65,8 +65,8 @@ void append_netcdf(rarray<double, 2> arr, int dat_count)
         NcFile dataFile("output.nc", NcFile::replace);
 
         // Create netCDF dimensions
-        NcDim xDim = dataFile.addDim("x", arr.shape()[0]);
-        NcDim yDim = dataFile.addDim("y", arr.shape()[1]);
+        NcDim xDim = dataFile.addDim("x");
+        NcDim yDim = dataFile.addDim("y",arr.shape()[1]);
         NcDim recDim = dataFile.addDim("t"); //adds an unlimited dimension
 
         // set up dims vector array
@@ -88,30 +88,35 @@ void append_netcdf(rarray<double, 2> arr, int dat_count)
 
 int main()
 {
-    vector<state_type> x_vec;
-    vector<double> times;
-
-    state_type x(3);
-    x[1] = 9.0; // S0
-    x[2] = 7.0;
-    x[0] = 491 - x[2];
-
-    size_t steps = integrate(rhs, x, 0.0, 10.0, 0.1, push_back_state_and_time(x_vec, times));
-
-    rarray<double, 2> data(steps + 1, 4);
-    int dat_count = 0;
-
-    /* output */
-    for (size_t i = 0; i <= steps; i++)
+    for (size_t z = 5; z < 11; z++)
     {
-        // cout << times[i] << '\t' << x_vec[i][0] << '\t'
-        //<< x_vec[i][1] << '\t' << x_vec[i][2] << '\n';
+        /* code */
 
-        data[i][0] = times[i];
-        data[i][1] = x_vec[i][0];
-        data[i][2] = x_vec[i][1];
-        data[i][3] = x_vec[i][2];
+        vector<state_type> x_vec;
+        vector<double> times;
+
+        state_type x(3);
+        x[1] = 9.0; // S0
+        x[2] = z;
+        x[0] = 491 - x[2];
+
+        size_t steps = integrate(rhs, x, 0.0, 100.0, 0.1, push_back_state_and_time(x_vec, times));
+
+        rarray<double, 2> data(steps + 1, 4);
+
+
+        /* output */
+        for (size_t i = 0; i <= steps; i++)
+        {
+            // cout << times[i] << '\t' << x_vec[i][0] << '\t'
+            //<< x_vec[i][1] << '\t' << x_vec[i][2] << '\n';
+
+            data[i][0] = times[i];
+            data[i][1] = x_vec[i][0];
+            data[i][2] = x_vec[i][1];
+            data[i][3] = x_vec[i][2];
+        }
+
+        append_netcdf(data, z-5);
     }
-
-    append_netcdf(data, dat_count);
 }

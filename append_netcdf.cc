@@ -12,9 +12,9 @@ void append_netcdf(rarray<double, 2> arr, int dat_count)
         NcFile dataFile("output.nc", NcFile::replace);
 
         // Create netCDF dimensions
-        NcDim xDim = dataFile.addDim("t", arr.shape()[0]);
+        NcDim xDim = dataFile.addDim("t"); //adds an unlimited dimension
         NcDim yDim = dataFile.addDim("tSKZ", arr.shape()[1]);
-        NcDim recDim = dataFile.addDim("rec"); //adds an unlimited dimension
+        NcDim recDim = dataFile.addDim("Z0"); //adds an unlimited dimension
 
         // set up dims vector array
         dims.push_back(recDim);

@@ -1,5 +1,6 @@
 #ifndef SOLVER
 #define SOLVER
+// zh3X4dJqkR
 
 // odeint is a header-only library, no linking against pre-compiled code is required
 #include <boost/numeric/odeint.hpp>
@@ -19,13 +20,29 @@ typedef std::vector<double> state_type;
 */
 
 // Constants
-#define TOTAL 500
-#define A 0.03
-#define B 0.02
-#define C 0.01
-#define E 0.015
+const double TOTAL = 500;
+const double A = 0.03;
+const double B = 0.02;
+const double C = 0.01;
+const double E = 0.015;
 
-void rhs(const state_type &x, state_type &dxdt, const double /*t*/); 
-void solve(const state_type &x0, int dat_count);
+void rhs(const state_type &x, state_type &dxdt, const double /*t*/);
+
+void solve_and_report(size_t steps, int dat_count, std::vector<state_type> x_vec, std::vector<double> times);
+
+struct push_back_state_and_time
+{
+    std::vector<state_type> &m_states;
+    std::vector<double> &m_times;
+
+    push_back_state_and_time(std::vector<state_type> &states, std::vector<double> &times)
+        : m_states(states), m_times(times) {}
+
+    void operator()(const state_type &x, double t)
+    {
+        m_states.push_back(x);
+        m_times.push_back(t);
+    }
+};
 
 #endif

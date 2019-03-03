@@ -3,13 +3,18 @@
 #include "append_netcdf.h"
 
 
-void solve(const state_type &x0, int dat_count)
+// even if there is no explicit t dependence, one has to define t as a function parameter.
+void rhs(const state_type &x, state_type &dxdt, const double /*t*/)
 {
-    vector<state_type> x_vec;
-    vector<double> times;
+    dxdt[0] = -B * x[0] * x[2] - E * x[0] * x[1];
+    dxdt[1] = -C * x[1] * x[2] + E * x[0] * x[1];
+    dxdt[2] = B * x[0] * x[2] + C * x[1] * x[2] - A * x[1] * x[2];
+}
+
+void solve_and_report(size_t steps, int dat_count, std::vector<state_type> x_vec, std::vector<double> times)
+{
     rarray<double, 2> data(steps + 1, 4);
 
-    size_t steps = integrate(rhs, x0, 0.0, 100.0, 0.1, push_back_state_and_time(x_vec, times));
     for (size_t i = 0; i <= steps; i++)
     {
         data[i][0] = times[i];
@@ -19,28 +24,3 @@ void solve(const state_type &x0, int dat_count)
     }
     append_netcdf(data, dat_count);
 }
-
-// Helper Function
-
-// even if there is no explicit t dependence, one has to define t as a function parameter.
-void rhs(const state_type &x, state_type &dxdt, const double /*t*/)
-{
-    dxdt[0] = -B * x[0] * x[2] - E * x[0] * x[1];
-    dxdt[1] = -C * x[1] * x[2] + E * x[0] * x[1];
-    dxdt[2] = B * x[0] * x[2] + C * x[1] * x[2] - A * x[1] * x[2];
-}
-
-struct push_back_state_and_time
-{
-    std::vector<state_type> &m_states;
-    std::vector<double> &m_times;
-
-    push_back_state_and_time(std::vector<state_type> &states, std::vector<double> &times)
-        : m_states(states), m_times(times) {}
-
-    void operator()(const state_type &x, double t)
-    {
-        m_states.push_back(x);
-        m_times.push_back(t);
-    }
-};
