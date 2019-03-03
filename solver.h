@@ -25,9 +25,21 @@ const double C = 0.01;
 const double E = 0.015;
 
 // Function to set the up the right hand side of the ODE
+//
+// Parameters:
+//   x          The ODE variables
+//   dxdt       the LHS of the equation i.e. the time derivative of variable
+//   t          even if there is no explicit t dependence, one has to define t as a function parameter.
+//
 void rhs(const state_type &x, state_type &dxdt, const double /*t*/);
 
 // Function for reporting the results of the integration, returns netcdf file called output as well as cmd print out with who won
+//
+// Parameters:
+//   steps          Number of time steps in the integration
+//   dat_count      value of Z0 and also position along the rec dimension in the netcdf file
+//   x_vec/times    Vectors for data storage during integration.
+//
 void report(size_t steps, int dat_count, std::vector<state_type> x_vec, std::vector<double> times);
 
 // Struct used to keep track of the values during the integration
